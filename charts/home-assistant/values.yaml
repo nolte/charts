@@ -320,7 +320,7 @@ appdaemon:
     # nodePort: 30000
 
 esphome:
-  enabled: false
+  enabled: true
   # Mount home-assistant's secrets.yaml into the esphome container.
   extraVolumes:
     - name: ha-config
@@ -330,6 +330,29 @@ esphome:
     - name: ha-config
       mountPath: /config/secrets.yaml
       subPath: secrets.yaml
+
+  git:
+    enabled: true
+
+    image:
+      repository: k8sathome/git-crypt
+      tag: 2020.09.07
+      pullPolicy: IfNotPresent
+
+    ## Specify the command that runs in the git-sync container to pull in configuration.
+    # command: []
+
+    # Committer settings
+    user:
+      name: ""
+      email: ""
+
+    repo: ""
+    secret: git-creds
+    syncPath: /config
+    keyPath: /root/.ssh
+
+
 
 mariadb:
   enabled: false
