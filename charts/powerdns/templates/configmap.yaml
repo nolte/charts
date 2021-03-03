@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "powerdns.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "powerdns.name" . }}
-    helm.sh/chart: {{ include "powerdns.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "powerdns.labels" . | nindent 4 }}
 data:
   01-general-config.conf: |
     {{ range $key, $value := .Values.powerdns.config -}}

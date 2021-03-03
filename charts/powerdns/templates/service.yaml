@@ -25,8 +25,7 @@ spec:
       port: 53
       protocol: UDP
   selector:
-    app.kubernetes.io/name: {{ include "powerdns.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "powerdns.selectorLabels" . | nindent 4 }}
 ---
 apiVersion: v1
 kind: Service
@@ -55,8 +54,7 @@ spec:
       port: 53
       protocol: TCP
   selector:
-    app.kubernetes.io/name: {{ include "powerdns.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "powerdns.selectorLabels" . | nindent 4 }}
 {{ if (.Values.powerdns.api_key) }}
 ---
 apiVersion: v1
@@ -76,6 +74,5 @@ spec:
       targetPort: dns-webserver
       protocol: TCP
   selector:
-    app.kubernetes.io/name: {{ include "powerdns.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "powerdns.selectorLabels" . | nindent 4 }}
 {{- end }}

@@ -8,15 +8,13 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "powerdns.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "powerdns.selectorLabels" . | nindent 6 }}
   strategy:
     type: {{ .Values.strategyType }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "powerdns.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "powerdns.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
