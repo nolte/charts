@@ -39,6 +39,11 @@ service:
   externalTrafficPolicy: ""
   type: ClusterIP
   port: 53
+  #annotations:
+  #  metallb.universe.tf/allow-shared-ip: powerdns
+
+deployment:
+  annotations: {}
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
