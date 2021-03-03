@@ -1,16 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "powerdns.fullname" . }}-udp
+  name: {{ include "powerdns.fullname" . }}
 {{- if .Values.service.annotations }}
   annotations:
 {{ toYaml .Values.service.annotations | indent 4 }}
 {{- end }}
   labels:
 {{ include "powerdns.labels" . | indent 4 }}
+{{- with .Values.service.labels }}
+{{ toYaml .}}
+{{- end }}
 spec:
   type: {{ .Values.service.type }}
-{{ if .Values.service.loadBalancerIP }}
+{{- if .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
 {{ end }}
 {{- if .Values.service.externalIPs }}
@@ -24,35 +27,11 @@ spec:
     - name: dns-udp
       port: 53
       protocol: UDP
-  selector:
-    {{- include "powerdns.selectorLabels" . | nindent 4 }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "powerdns.fullname" . }}-tcp
-{{- if .Values.service.annotations }}
-  annotations:
-{{ toYaml .Values.service.annotations | indent 4 }}
-{{- end }}
-  labels:
-{{ include "powerdns.labels" . | indent 4 }}
-spec:
-  type: {{ .Values.service.type }}
-{{ if .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
-{{ end }}
-{{- if .Values.service.externalIPs }}
-  externalIPs:
-{{ toYaml .Values.service.externalIPs | indent 4 }}
-{{- end }}
-{{- if (.Values.service.externalTrafficPolicy) }}
-  externalTrafficPolicy: "{{ .Values.service.externalTrafficPolicy }}"
-{{- end }}
-  ports:
+      targetPort: dns-udp
     - name: dns-tcp
       port: 53
       protocol: TCP
+      targetPort: dns-tcp
   selector:
     {{- include "powerdns.selectorLabels" . | nindent 4 }}
 {{ if (.Values.powerdns.api_key) }}
